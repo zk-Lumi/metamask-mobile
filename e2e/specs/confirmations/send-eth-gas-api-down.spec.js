@@ -47,7 +47,11 @@ describe(Regression('Send ETH'), () => {
         await AmountView.tapNextButton();
 
         //Tap Edit Gas link
+        await TransactionConfirmationView.tapEstimatedGasLink
 
+        //Add mock
+
+        
         await TransactionConfirmationView.tapConfirmButton();
         await TabBarComponent.tapActivity();
 
