@@ -11,16 +11,17 @@ import {
 import { SMART_CONTRACTS } from '../../../app/util/test/smart-contracts';
 import FixtureBuilder from '../../fixtures/fixture-builder';
 
+const SMART_CONTRACT = SMART_CONTRACTS.NFTS;
+
 describe(SmokeAssets('Import NFT'), () => {
   beforeAll(async () => {
     jest.setTimeout(150000);
+    await TestHelpers.reverseServerPort();
   });
 
   it('should add a collectible', async () => {
-    const SMART_CONTRACT = SMART_CONTRACTS.NFTS;
     await withFixtures(
       {
-        dapp: true,
         fixture: new FixtureBuilder().withGanacheNetwork().build(),
         restartDevice: true,
         ganacheOptions: defaultGanacheOptions,
