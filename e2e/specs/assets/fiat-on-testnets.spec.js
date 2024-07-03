@@ -1,20 +1,20 @@
 'use strict';
-import { SmokeAssets } from '../../tags';
-import SettingsView from '../../pages/Settings/SettingsView';
-import TabBarComponent from '../../pages/TabBarComponent';
-import { loginToApp } from '../../viewHelper';
-import FixtureBuilder from '../../fixtures/fixture-builder';
-import { withFixtures } from '../../fixtures/fixture-helper';
-import { CustomNetworks } from '../../resources/networks.e2e';
-import NetworkListModal from '../../pages/modals/NetworkListModal';
-import WalletView from '../../pages/WalletView';
-import NetworkEducationModal from '../../pages/modals/NetworkEducationModal';
-import AdvancedSettingsView from '../../pages/Settings/AdvancedView';
+import { SmokeAssets } from '../../tags.js';
+import SettingsView from '../../pages/Settings/SettingsView.js';
+import TabBarComponent from '../../pages/TabBarComponent.js';
+import { loginToApp } from '../../viewHelper.js';
+import FixtureBuilder from '../../fixtures/fixture-builder.js';
+import { withFixtures } from '../../fixtures/fixture-helper.js';
+import { CustomNetworks } from '../../resources/networks.e2e.js';
+import NetworkListModal from '../../pages/modals/NetworkListModal.js';
+import WalletView from '../../pages/WalletView.js';
+import NetworkEducationModal from '../../pages/modals/NetworkEducationModal.js';
+import AdvancedSettingsView from '../../pages/Settings/AdvancedView.js';
 import FiatOnTestnetsModal from '../../pages/modals/FiatOnTestnetsModal.js';
 import Assertions from '../../utils/Assertions.js';
 import Matchers from '../../utils/Matchers.js';
 import TestHelpers from '../../helpers.js';
-import { WalletViewSelectorsIDs } from '../../selectors/wallet/WalletView.selectors';
+import { WalletViewSelectorsIDs } from '../../selectors/wallet/WalletView.selectors.js';
 
 const SEPOLIA = CustomNetworks.Sepolia.providerConfig.nickname;
 
@@ -27,16 +27,11 @@ describe(SmokeAssets('Fiat On Testnets Setting'), () => {
   it('should show fiat values on testnets when enabled', async () => {
     await withFixtures(
       {
-        fixture: new FixtureBuilder().build(),
+        fixture: new FixtureBuilder().withSepoliaNetwork().build(),
         restartDevice: true,
       },
       async () => {
         await loginToApp();
-
-        // Switch to Sepolia
-        await WalletView.tapNetworksButtonOnNavBar();
-        await NetworkListModal.changeNetworkTo(SEPOLIA);
-        await NetworkEducationModal.tapGotItButton();
 
         // Verify no fiat values displayed
         await Assertions.checkIfHasText(

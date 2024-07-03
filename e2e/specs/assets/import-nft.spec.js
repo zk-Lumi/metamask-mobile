@@ -21,10 +21,7 @@ describe(SmokeAssets('Import NFT'), () => {
     await withFixtures(
       {
         dapp: true,
-        fixture: new FixtureBuilder()
-          .withGanacheNetwork()
-          .withPermissionControllerConnectedToTestDapp()
-          .build(),
+        fixture: new FixtureBuilder().withGanacheNetwork().build(),
         restartDevice: true,
         ganacheOptions: defaultGanacheOptions,
         smartContract: SMART_CONTRACT,
@@ -56,6 +53,13 @@ describe(SmokeAssets('Import NFT'), () => {
         await WalletView.tapOnNFTInWallet('TestDappNFTs');
         await WalletView.isNFTNameVisible('TestDappNFTs #1');
         await WalletView.scrollUpOnNFTsTab();
+
+        // because we witness a bug where nft's disappeared after relaunching
+        await device.terminateApp();
+        await device.launchApp({ newInstance: false });
+        await loginToApp();
+        await WalletView.tapNftTab();
+        await WalletView.isNFTNameVisible('TestDappNFTs #1');
       },
     );
   });
