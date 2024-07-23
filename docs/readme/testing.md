@@ -32,7 +32,7 @@ Prerequisites for running tests
     -  Ensure that the `applesimutils` is installed on your machine by typing `applesimutils` command in your terminal. Please note that `applesimutils` is essential for running the iOS tests. If you don't have `applesimutils` installed, please use the guidelines provided [here](https://github.com/wix/AppleSimulatorUtils) to install it.
 
     - To ensure that the detox-cli is properly installed, please verify its presence by running the command `detox` in your terminal. The detox-cli serves as a convenient script that facilitates running commands through a local Detox executable located at node_modules/.bin/detox. Its purpose is to simplify the operation of Detox from the command line. For example, you can execute commands like `detox test -c ios.sim.debug` with ease using detox-cli. In case the detox-cli is not installed, please refer to the instructions provided [here](https://wix.github.io/Detox/docs/introduction/environment-setup/#1-command-line-tools-detox-cli) for detailed guidance. 
-- The default device for iOS is the iPhone 13 Pro and Android the Pixel 5. Ensure you have these set up. You can change the default devices at anytime by updating the `device.type` in the detox config `e2e/.detoxrc.js`
+- The default device for iOS is the iPhone 15 Pro and Android the Pixel 6. Ensure you have these set up. You can change the default devices at anytime by updating the `device.type` in the detox config `e2e/.detoxrc.js`
 - Make sure that Metro is running. Use this command to launch the metro server:
 
 ```bash
