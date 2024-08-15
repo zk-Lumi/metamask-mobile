@@ -243,7 +243,8 @@ workflows:
           title: Get Yarn cache directory
       - yarn@0:
           inputs:
-            - command: setup
+            - command: setup 
+          timeout: 1000
           title: Yarn Setup
   prep_environment:
     steps:
@@ -564,7 +565,7 @@ workflows:
       - android_e2e_test
   android_e2e_build:
     before_run:
-      - code_setup
+      - code_setup 
       - install_detox
       - set_commit_hash
     after_run:
@@ -635,11 +636,11 @@ workflows:
           inputs:
             - pipeline_intermediate_files: android/app/build/outputs:INTERMEDIATE_ANDROID_BUILD_DIR
           title: Save Android build
-      - save-cache@1:
-          title: Save node_modules
-          inputs:
-            - key: node_modules-{{ .OS }}-{{ .Arch }}-{{ getenv "BRANCH_COMMIT_HASH" }}
-            - paths: node_modules
+      # - save-cache@1:
+      #     title: Save node_modules
+      #     inputs:
+      #       - key: node_modules-{{ .OS }}-{{ .Arch }}-{{ getenv "BRANCH_COMMIT_HASH" }}
+      #       - paths: node_modules
     meta:
       bitrise.io:
         machine_type_id: elite-xl
@@ -670,10 +671,10 @@ workflows:
                 # Copy saved files for Detox usage
                 # INTERMEDIATE_ANDROID_BUILD_DIR is the cached directory from android_e2e_build's "Save Android build" step
                 cp -r "$INTERMEDIATE_ANDROID_BUILD_DIR" "$BITRISE_SOURCE_DIR/android/app/build"
-      - restore-cache@2:
-          title: Restore cache node_modules
-          inputs:
-            - key: node_modules-{{ .OS }}-{{ .Arch }}-{{ getenv "BRANCH_COMMIT_HASH" }}
+      # - restore-cache@2:
+      #     title: Restore cache node_modules
+      #     inputs:
+      #       - key: node_modules-{{ .OS }}-{{ .Arch }}-{{ getenv "BRANCH_COMMIT_HASH" }}
       - script@1:
           title: Download cmake 3.22.1 with sdkmanager
           is_always_run: false
@@ -772,10 +773,10 @@ workflows:
                 cp -r "$INTERMEDIATE_IOS_BUILD_DIR" "$BITRISE_SOURCE_DIR/ios/build"
                 cp -r "$INTERMEDIATE_IOS_DETOX_DIR" "$BITRISE_SOURCE_DIR/../Library/Detox"
       - restore-cocoapods-cache@2: {}
-      - restore-cache@2:
-          title: Restore cache node_modules
-          inputs:
-            - key: node_modules-{{ .OS }}-{{ .Arch }}-{{ getenv "BRANCH_COMMIT_HASH" }}
+      # - restore-cache@2:
+      #     title: Restore cache node_modules
+      #     inputs:
+      #       - key: node_modules-{{ .OS }}-{{ .Arch }}-{{ getenv "BRANCH_COMMIT_HASH" }}
       - certificate-and-profile-installer@1: {}
       - set-xcode-build-number@1:
           inputs:
@@ -892,11 +893,11 @@ workflows:
                 ios/build/Build:INTERMEDIATE_IOS_BUILD_DIR
                 ../Library/Detox/ios:INTERMEDIATE_IOS_DETOX_DIR
           title: Save iOS build
-      - save-cache@1:
-          title: Save node_modules
-          inputs:
-            - key: node_modules-{{ .OS }}-{{ .Arch }}-{{ getenv "BRANCH_COMMIT_HASH" }}
-            - paths: node_modules
+      # - save-cache@1:
+      #     title: Save node_modules
+      #     inputs:
+      #       - key: node_modules-{{ .OS }}-{{ .Arch }}-{{ getenv "BRANCH_COMMIT_HASH" }}
+      #       - paths: node_modules
   ios_e2e_test:
     before_run:
       - setup
@@ -925,10 +926,10 @@ workflows:
                 cp -r "$INTERMEDIATE_IOS_BUILD_DIR" "$BITRISE_SOURCE_DIR/ios/build"
                 cp -r "$INTERMEDIATE_IOS_DETOX_DIR" "$BITRISE_SOURCE_DIR/../Library/Detox"
       - restore-cocoapods-cache@2: {}
-      - restore-cache@2:
-          title: Restore cache node_modules
-          inputs:
-            - key: node_modules-{{ .OS }}-{{ .Arch }}-{{ getenv "BRANCH_COMMIT_HASH" }}
+      # - restore-cache@2:
+      #     title: Restore cache node_modules
+      #     inputs:
+      #       - key: node_modules-{{ .OS }}-{{ .Arch }}-{{ getenv "BRANCH_COMMIT_HASH" }}
       - certificate-and-profile-installer@1: {}
       - set-xcode-build-number@1:
           inputs:
@@ -1565,4 +1566,6 @@ trigger_map:
   - tag: 'qa-*'
     pipeline: create_qa_builds_pipeline
   - tag: 'dev-e2e-*'
+    pipeline: pr_smoke_e2e_pipeline
+  - push_branch: ci/disable-npm-cache-on-e2e
     pipeline: pr_smoke_e2e_pipeline
