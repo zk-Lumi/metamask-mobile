@@ -647,7 +647,7 @@ workflows:
         stack: linux-docker-android-20.04
   android_e2e_test:
     before_run:
-      - setup
+      - code_setup
       - install_detox
       - prep_environment
     after_run:
@@ -900,7 +900,7 @@ workflows:
       #       - paths: node_modules
   ios_e2e_test:
     before_run:
-      - setup
+      - code_setup
       - install_detox
       - prep_environment
     after_run:
