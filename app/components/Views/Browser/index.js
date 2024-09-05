@@ -67,7 +67,6 @@ export const Browser = (props) => {
   const { trackEvent } = useMetrics();
   const { toastRef } = useContext(ToastContext);
   const browserUrl = props.route?.params?.url;
-  const linkType = props.route?.params?.linkType;
   const prevSiteHostname = useRef(browserUrl);
   const { accounts, ensByAccountAddress } = useAccounts();
   const accountAvatarType = useSelector((state) =>
@@ -115,8 +114,8 @@ export const Browser = (props) => {
     [navigation, route, colors],
   );
 
-  const newTab = (url, linkType) => {
-    createNewTab(url || AppConstants.HOMEPAGE_URL, linkType);
+  const newTab = (url) => {
+    createNewTab(url || AppConstants.HOMEPAGE_URL);
   };
 
   const updateTabInfo = (url, tabID) =>
@@ -223,15 +222,15 @@ export const Browser = (props) => {
     [tabs],
   );
 
-  // Handle links with associated timestamp.
+  // Handle deeplinks.
   useEffect(
     () => {
       const newTabUrl = route.params?.newTabUrl;
       const deeplinkTimestamp = route.params?.timestamp;
       const existingTabId = route.params?.existingTabId;
       if (newTabUrl && deeplinkTimestamp) {
-        // Open url from link.
-        newTab(newTabUrl, linkType);
+        // Open url from deeplink.
+        newTab(newTabUrl);
       } else if (existingTabId) {
         const existingTab = tabs.find((tab) => tab.id === existingTabId);
         if (existingTab) {
@@ -360,7 +359,6 @@ export const Browser = (props) => {
         id={tab.id}
         key={`tab_${tab.id}`}
         initialUrl={tab.url || AppConstants.HOMEPAGE_URL}
-        linkType={tab.linkType}
         updateTabInfo={updateTabInfo}
         showTabs={showTabs}
         newTab={newTab}
@@ -386,7 +384,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  createNewTab: (url, linkType) => dispatch(createNewTab(url, linkType)),
+  createNewTab: (url) => dispatch(createNewTab(url)),
   closeAllTabs: () => dispatch(closeAllTabs()),
   closeTab: (id) => dispatch(closeTab(id)),
   setActiveTab: (id) => dispatch(setActiveTab(id)),

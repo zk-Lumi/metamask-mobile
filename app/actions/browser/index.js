@@ -68,13 +68,11 @@ export function closeAllTabs() {
  * Creates a new tab
  *
  * @param {string} url - The website's url
- * @param {string} linkType - optional link type
  */
-export function createNewTab(url, linkType) {
+export function createNewTab(url) {
   return {
     type: 'CREATE_NEW_TAB',
     url,
-    linkType,
     id: Date.now(),
   };
 }

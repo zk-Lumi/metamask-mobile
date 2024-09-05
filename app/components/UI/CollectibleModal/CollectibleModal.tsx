@@ -28,7 +28,6 @@ import { MetaMetricsEvents } from '../../../core/Analytics';
 import { selectChainId } from '../../../selectors/networkController';
 import { getDecimalChainId } from '../../../util/networks';
 import { Nft } from '@metamask/assets-controllers';
-import { EXTERNAL_LINK_TYPE } from '../../../constants/browser';
 
 const CollectibleModal = () => {
   const navigation = useNavigation();
@@ -93,7 +92,6 @@ const CollectibleModal = () => {
         screen: Routes.BROWSER_VIEW,
         params: {
           newTabUrl: url,
-          linkType: EXTERNAL_LINK_TYPE,
           timestamp: Date.now(),
         },
       });
