@@ -1,6 +1,5 @@
 // Third party dependencies.
 import { StyleSheet, ViewStyle } from 'react-native';
-import { lightTheme } from '@metamask/design-tokens';
 
 // External dependencies.
 import { Theme } from '../../../../../../util/theme/models';
@@ -19,8 +18,8 @@ const styleSheet = (params: {
   theme: Theme;
   vars: ButtonPrimaryStyleSheetVars;
 }) => {
-  const { vars } = params;
-  const { colors } = lightTheme;
+  const { vars, theme } = params;
+  const { colors } = theme;
   const { style, isDanger, pressed } = vars;
   const colorObj = isDanger ? colors.error : colors.primary;
 

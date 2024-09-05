@@ -58,7 +58,7 @@ const styleSheet = (params: { theme: Theme; vars: any }) => {
       textColor = theme.colors.info.default;
       break;
     default:
-      textColor = color;
+      textColor = theme.colors.text.default;
   }
   const variantObject = theme.typography[variant as TextVariant];
   const fontObject = {

@@ -5,7 +5,6 @@ exports[`ButtonPrimary render matches latest snapshot 1`] = `
   accessibilityRole="button"
   accessible={true}
   activeOpacity={1}
-  disabled={false}
   onPress={[Function]}
   onPressIn={[Function]}
   onPressOut={[Function]}
@@ -25,7 +24,7 @@ exports[`ButtonPrimary render matches latest snapshot 1`] = `
   <SvgMock
     color="#ffffff"
     height={16}
-    name="Add"
+    name="Bank"
     style={
       {
         "height": 16,
@@ -48,20 +47,7 @@ exports[`ButtonPrimary render matches latest snapshot 1`] = `
       }
     }
   >
-    Sample label
+    Click me!
   </Text>
-  <SvgMock
-    color="#ffffff"
-    height={16}
-    name="AddSquare"
-    style={
-      {
-        "height": 16,
-        "marginLeft": 8,
-        "width": 16,
-      }
-    }
-    width={16}
-  />
 </TouchableOpacity>
 `;
