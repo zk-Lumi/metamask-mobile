@@ -20,7 +20,7 @@ class NetworkApprovalModal {
   }
 
   async tapApproveButton() {
-    await Gestures.waitAndTap(this.approvedButton);
+    await Gestures.tap(this.approvedButton);
   }
 }
 
