@@ -590,6 +590,7 @@ workflows:
     meta:
       bitrise.io:
         stack: linux-docker-android-22.04
+        machine_type_id: elite-xl
     envs:
       - SHARD: '1'
     after_run:
@@ -598,6 +599,7 @@ workflows:
     meta:
       bitrise.io:
         stack: linux-docker-android-22.04
+        machine_type_id: elite-xl
     envs:
       - SHARD: '2'
     after_run:
@@ -606,6 +608,7 @@ workflows:
     meta:
       bitrise.io:
         stack: linux-docker-android-22.04
+        machine_type_id: elite-xl
     envs:
       - SHARD: '3'
     after_run:
@@ -614,6 +617,7 @@ workflows:
     meta:
       bitrise.io:
         stack: linux-docker-android-22.04
+        machine_type_id: elite-xl
     envs:
       - SHARD: '4'
     after_run:
@@ -622,6 +626,7 @@ workflows:
     meta:
       bitrise.io:
         stack: linux-docker-android-22.04
+        machine_type_id: elite-xl
     envs:
       - SHARD: '5'
     after_run:
