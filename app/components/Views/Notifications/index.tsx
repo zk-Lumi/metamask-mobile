@@ -1,6 +1,7 @@
-import React, { useCallback, useEffect, useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { View, TouchableOpacity } from 'react-native';
 import { useSelector } from 'react-redux';
+import notifee from '@notifee/react-native';
 import { NotificationsViewSelectorsIDs } from '../../../../e2e/selectors/NotificationsView.selectors';
 import styles from './styles';
 import Notifications from '../../UI/Notification/List';
@@ -40,7 +41,7 @@ const NotificationsView = ({
 }: {
   navigation: NavigationProp<ParamListBase>;
 }) => {
-  const { listNotifications, isLoading } = useListNotifications();
+  const { isLoading } = useListNotifications();
   const isNotificationEnabled = useSelector(
     selectIsMetamaskNotificationsEnabled,
   );
@@ -49,6 +50,7 @@ const NotificationsView = ({
 
   const handleMarkAllAsRead = useCallback(() => {
     markNotificationAsRead(notifications);
+    notifee.setBadgeCount(0);
   }, [markNotificationAsRead, notifications]);
 
   const allNotifications = useMemo(() => {
@@ -74,13 +76,11 @@ const NotificationsView = ({
   // NOTE - We currently do not support web3 notifications
   const announcementNotifications = useMemo(() => [], []);
 
-  // Effect - fetch notifications when component/view is visible.
-  useEffect(() => {
-    async function updateNotifications() {
-      await listNotifications();
-    }
-    updateNotifications();
-  }, [listNotifications]);
+  const unreadCount = useMemo(
+    () => allNotifications.filter((n) => !n.isRead).length,
+    [allNotifications],
+  );
+
 
   return (
     <View
@@ -96,14 +96,16 @@ const NotificationsView = ({
             web3Notifications={announcementNotifications}
             loading={isLoading}
           />
-          <Button
-            variant={ButtonVariants.Primary}
-            label={strings('notifications.mark_all_as_read')}
-            onPress={handleMarkAllAsRead}
-            size={ButtonSize.Lg}
-            style={styles.stickyButton}
-            disabled={loading}
-          />
+          {!isLoading && unreadCount > 0 && (
+            <Button
+              variant={ButtonVariants.Primary}
+              label={strings('notifications.mark_all_as_read')}
+              onPress={handleMarkAllAsRead}
+              size={ButtonSize.Lg}
+              style={styles.stickyButton}
+              disabled={loading}
+            />
+          )}
         </>
       ) : (
         <Empty

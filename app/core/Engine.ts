@@ -215,7 +215,6 @@ import { submitSmartTransactionHook } from '../util/smart-transactions/smart-pub
 import { SmartTransactionsControllerState } from '@metamask/smart-transactions-controller/dist/SmartTransactionsController';
 import { zeroAddress } from 'ethereumjs-util';
 import { toChecksumHexAddress } from '@metamask/controller-utils';
-import { getPermittedAccounts } from './Permissions';
 import { ExtendedControllerMessenger } from './ExtendedControllerMessenger';
 import EthQuery from '@metamask/eth-query';
 import { TransactionControllerOptions } from '@metamask/transaction-controller/dist/types/TransactionController';
@@ -457,7 +456,6 @@ class Engine {
     };
 
     const approvalController = new ApprovalController({
-      // @ts-expect-error TODO: Resolve/patch mismatch between base-controller versions. Before: never, never. Now: string, string, which expects 3rd and 4th args to be informed for restrictedControllerMessengers
       messenger: this.controllerMessenger.getRestricted({
         name: 'ApprovalController',
         allowedEvents: [],
@@ -475,6 +473,7 @@ class Engine {
     });
 
     const preferencesController = new PreferencesController({
+      // @ts-expect-error TODO: Resolve mismatch between base-controller versions.
       messenger: this.controllerMessenger.getRestricted({
         name: 'PreferencesController',
         allowedActions: [],
@@ -517,6 +516,7 @@ class Engine {
           listener,
         ),
       chainId: networkController.state.providerConfig.chainId,
+      // @ts-expect-error TODO: Resolve mismatch between base-controller versions.
       getNetworkClientById:
         networkController.getNetworkClientById.bind(networkController),
     });
@@ -528,8 +528,10 @@ class Engine {
             AppConstants.NETWORK_STATE_CHANGE_EVENT,
             listener,
           ),
+        // @ts-expect-error TODO: Resolve mismatch between base-controller versions.
         getNetworkClientById:
           networkController.getNetworkClientById.bind(networkController),
+        // @ts-expect-error TODO: Resolve mismatch between base-controller versions.
         messenger: this.controllerMessenger.getRestricted({
           name: 'NftController',
           allowedActions: [
@@ -567,6 +569,7 @@ class Engine {
     );
 
     const loggingController = new LoggingController({
+      // @ts-expect-error TODO: Resolve mismatch between base-controller versions.
       messenger: this.controllerMessenger.getRestricted<
         'LoggingController',
         never,
@@ -578,7 +581,6 @@ class Engine {
       }),
       state: initialState.LoggingController,
     });
-
     const accountsControllerMessenger: AccountsControllerMessenger =
       this.controllerMessenger.getRestricted({
         name: 'AccountsController',
@@ -608,11 +610,13 @@ class Engine {
     const tokensController = new TokensController({
       chainId: networkController.state.providerConfig.chainId,
       config: {
+        // @ts-expect-error TODO: Resolve mismatch between network-controller versions.
         provider: networkController.getProviderAndBlockTracker().provider,
         chainId: networkController.state.providerConfig.chainId,
         selectedAddress: preferencesController.state.selectedAddress,
       },
       state: initialState.TokensController,
+      // @ts-expect-error TODO: Resolve mismatch between base-controller versions.
       messenger: this.controllerMessenger.getRestricted({
         name: 'TokensController',
         allowedActions: [
@@ -633,6 +637,7 @@ class Engine {
           AppConstants.NETWORK_STATE_CHANGE_EVENT,
           listener,
         ),
+      // @ts-expect-error TODO: Resolve mismatch between base-controller versions.
       messenger: this.controllerMessenger.getRestricted({
         name: 'TokenListController',
         allowedActions: [],
@@ -640,6 +645,7 @@ class Engine {
       }),
     });
     const currencyRateController = new CurrencyRateController({
+      // @ts-expect-error TODO: Resolve mismatch between base-controller versions.
       messenger: this.controllerMessenger.getRestricted({
         name: 'CurrencyRateController',
         allowedActions: [`${networkController.name}:getNetworkClientById`],
@@ -651,7 +657,6 @@ class Engine {
       networkController.state.selectedNetworkClientId,
     );
     const gasFeeController = new GasFeeController({
-      // @ts-expect-error TODO: Resolve mismatch between base-controller versions.
       messenger: this.controllerMessenger.getRestricted({
         name: 'GasFeeController',
         allowedActions: [
@@ -682,6 +687,7 @@ class Engine {
     });
 
     const phishingController = new PhishingController({
+      // @ts-expect-error TODO: Resolve mismatch between base-controller versions.
       messenger: this.controllerMessenger.getRestricted({
         name: 'PhishingController',
         allowedActions: [],
@@ -707,6 +713,7 @@ class Engine {
         preferencesController,
       ),
       encryptor,
+      // @ts-expect-error TODO: Resolve mismatch between base-controller versions.
       messenger: this.controllerMessenger.getRestricted({
         name: 'KeyringController',
         allowedActions: [],
@@ -824,6 +831,7 @@ class Engine {
         preferencesController.state.isMultiAccountBalancesEnabled,
       getCurrentChainId: () =>
         toHexadecimal(networkController.state.providerConfig.chainId),
+      // @ts-expect-error TODO: Resolve mismatch between base-controller versions.
       getNetworkClientById:
         networkController.getNetworkClientById.bind(networkController),
     });
@@ -1141,12 +1149,10 @@ class Engine {
         }),
       getGasFeeEstimates:
         gasFeeController.fetchGasFeeEstimates.bind(gasFeeController),
-      // @ts-expect-error NetworkController in TransactionController is later version
       // but only breaking change is Node version and bumped dependencies
       getNetworkClientRegistry:
         networkController.getNetworkClientRegistry.bind(networkController),
       getNetworkState: () => networkController.state,
-      getPermittedAccounts: (origin) => getPermittedAccounts(origin as string),
       hooks: {
         publish: (transactionMeta) => {
           const shouldUseSmartTransaction = selectShouldUseSmartTransaction(
@@ -1180,7 +1186,6 @@ class Engine {
       },
       isSimulationEnabled: () =>
         preferencesController.state.useTransactionSimulations,
-      // @ts-expect-error TransactionController is using later BaseController version
       // but only breaking change is Node version
       messenger: this.controllerMessenger.getRestricted({
         name: 'TransactionController',
@@ -1188,6 +1193,7 @@ class Engine {
           `${accountsController.name}:getSelectedAccount`,
           `${approvalController.name}:addRequest`,
           `${networkController.name}:getNetworkClientById`,
+          `${networkController.name}:findNetworkClientIdByChainId`,
         ],
         allowedEvents: [`NetworkController:stateChange`],
       }),
@@ -1239,7 +1245,6 @@ class Engine {
         getNonceLock: this.transactionController.getNonceLock.bind(
           this.transactionController,
         ),
-        // @ts-expect-error Older TransactionController version in SmartTransactionsController means TransactionMeta types don't match.
         getTransactions: this.transactionController.getTransactions.bind(
           this.transactionController,
         ),
@@ -1255,8 +1260,10 @@ class Engine {
           networkController.getProviderAndBlockTracker().provider as any,
 
         trackMetaMetricsEvent: smartTransactionsControllerTrackMetaMetricsEvent,
+        getMetaMetricsProps: () => Promise.resolve({}), // Return MetaMetrics props once we enable HW wallets for smart transactions.
       },
       {
+        // @ts-expect-error TODO: resolve types
         supportedChainIds: getAllowedSmartTransactionsChainIds(),
       },
       initialState.SmartTransactionsController,
@@ -1271,6 +1278,7 @@ class Engine {
       tokensController,
       tokenListController,
       new TokenDetectionController({
+        // @ts-expect-error TODO: Resolve mismatch between base-controller versions.
         messenger: this.controllerMessenger.getRestricted({
           name: 'TokenDetectionController',
           allowedActions: [
@@ -1325,6 +1333,7 @@ class Engine {
         addNft: nftController.addNft.bind(nftController),
         getNftApi: nftController.getNftApi.bind(nftController),
         getNftState: () => nftController.state,
+        // @ts-expect-error TODO: Resolve mismatch between base-controller versions.
         getNetworkClientById:
           networkController.getNetworkClientById.bind(networkController),
         disabled: false,
@@ -1335,6 +1344,7 @@ class Engine {
       phishingController,
       preferencesController,
       new TokenBalancesController({
+        // @ts-expect-error TODO: Resolve mismatch between base-controller versions.
         messenger: this.controllerMessenger.getRestricted({
           name: 'TokenBalancesController',
           allowedActions: ['PreferencesController:getState'],
@@ -1360,6 +1370,7 @@ class Engine {
         selectedAddress: preferencesController.state.selectedAddress,
         tokenPricesService: codefiTokenApiV2,
         interval: 30 * 60 * 1000,
+        // @ts-expect-error TODO: Resolve mismatch between base-controller versions.
         getNetworkClientById:
           networkController.getNetworkClientById.bind(networkController),
       }),
@@ -1396,6 +1407,7 @@ class Engine {
       approvalController,
       permissionController,
       new SignatureController({
+        // @ts-expect-error TODO: Resolve mismatch between base-controller versions.
         messenger: this.controllerMessenger.getRestricted({
           name: 'SignatureController',
           allowedActions: [
@@ -1546,6 +1558,7 @@ class Engine {
     this.configureControllersOnNetworkChange();
     this.startPolling();
     this.handleVaultBackup();
+    this.transactionController.clearUnapprovedTransactions();
 
     Engine.instance = this;
   }
@@ -1599,6 +1612,7 @@ class Engine {
     }
     provider.sendAsync = provider.sendAsync.bind(provider);
     AccountTrackerController.configure({ provider });
+    // @ts-expect-error TODO: Resolve mismatch between base-controller versions.
     AssetsContractController.configure({ provider });
 
     SwapsController.configure({
@@ -1625,95 +1639,110 @@ class Engine {
       TokensController,
       NetworkController,
     } = this.context;
-    const selectedInternalAccount = AccountsController.getSelectedAccount();
-    const selectSelectedInternalAccountChecksummedAddress =
-      toChecksumHexAddress(selectedInternalAccount.address);
-    const { currentCurrency } = CurrencyRateController.state;
-    const { chainId, ticker } = NetworkController.state.providerConfig;
-    const { settings: { showFiatOnTestnets } = {} } = store.getState();
 
-    if (isTestNet(chainId) && !showFiatOnTestnets) {
-      return { ethFiat: 0, tokenFiat: 0, ethFiat1dAgo: 0, tokenFiat1dAgo: 0 };
-    }
+    const selectedInternalAccount = AccountsController.getAccount(
+      AccountsController.state.internalAccounts.selectedAccount,
+    );
 
-    const conversionRate =
-      CurrencyRateController.state?.currencyRates?.[ticker]?.conversionRate ??
-      0;
+    if (selectedInternalAccount) {
+      const selectSelectedInternalAccountChecksummedAddress =
+        toChecksumHexAddress(selectedInternalAccount.address);
+      const { currentCurrency } = CurrencyRateController.state;
+      const { chainId, ticker } = NetworkController.state.providerConfig;
+      const { settings: { showFiatOnTestnets } = {} } = store.getState();
 
-    const { accountsByChainId } = AccountTrackerController.state;
-    const { tokens } = TokensController.state;
-    const { marketData } = TokenRatesController.state;
-    const tokenExchangeRates = marketData?.[toHexadecimal(chainId)];
+      if (isTestNet(chainId) && !showFiatOnTestnets) {
+        return { ethFiat: 0, tokenFiat: 0, ethFiat1dAgo: 0, tokenFiat1dAgo: 0 };
+      }
 
-    let ethFiat = 0;
-    let ethFiat1dAgo = 0;
-    let tokenFiat = 0;
-    let tokenFiat1dAgo = 0;
-    const decimalsToShow = (currentCurrency === 'usd' && 2) || undefined;
-    if (
-      accountsByChainId?.[toHexadecimal(chainId)]?.[
-        selectSelectedInternalAccountChecksummedAddress
-      ]
-    ) {
-      ethFiat = weiToFiatNumber(
-        accountsByChainId[toHexadecimal(chainId)][
+      const conversionRate =
+        CurrencyRateController.state?.currencyRates?.[ticker]?.conversionRate ??
+        0;
+
+      const { accountsByChainId } = AccountTrackerController.state;
+      const { tokens } = TokensController.state;
+      const { marketData } = TokenRatesController.state;
+      const tokenExchangeRates = marketData?.[toHexadecimal(chainId)];
+
+      let ethFiat = 0;
+      let ethFiat1dAgo = 0;
+      let tokenFiat = 0;
+      let tokenFiat1dAgo = 0;
+      const decimalsToShow = (currentCurrency === 'usd' && 2) || undefined;
+      if (
+        accountsByChainId?.[toHexadecimal(chainId)]?.[
           selectSelectedInternalAccountChecksummedAddress
-        ].balance,
-        conversionRate,
-        decimalsToShow,
-      );
+        ]
+      ) {
+        ethFiat = weiToFiatNumber(
+          accountsByChainId[toHexadecimal(chainId)][
+            selectSelectedInternalAccountChecksummedAddress
+          ].balance,
+          conversionRate,
+          decimalsToShow,
+        );
+      }
+
+      const ethPricePercentChange1d =
+        tokenExchangeRates?.[zeroAddress() as Hex]?.pricePercentChange1d;
+
+      ethFiat1dAgo =
+        ethPricePercentChange1d !== undefined
+          ? ethFiat / (1 + ethPricePercentChange1d / 100)
+          : ethFiat;
+
+      if (tokens.length > 0) {
+        const { contractBalances: tokenBalances } =
+          TokenBalancesController.state;
+        tokens.forEach(
+          (item: { address: string; balance?: string; decimals: number }) => {
+            const exchangeRate =
+              tokenExchangeRates?.[item.address as Hex]?.price;
+
+            const tokenBalance =
+              item.balance ||
+              (item.address in tokenBalances
+                ? renderFromTokenMinimalUnit(
+                    tokenBalances[item.address],
+                    item.decimals,
+                  )
+                : undefined);
+            const tokenBalanceFiat = balanceToFiatNumber(
+              // TODO: Fix this by handling or eliminating the undefined case
+              // @ts-expect-error This variable can be `undefined`, which would break here.
+              tokenBalance,
+              conversionRate,
+              exchangeRate,
+              decimalsToShow,
+            );
+
+            const tokenPricePercentChange1d =
+              tokenExchangeRates?.[item.address as Hex]?.pricePercentChange1d;
+
+            const tokenBalance1dAgo =
+              tokenPricePercentChange1d !== undefined
+                ? tokenBalanceFiat / (1 + tokenPricePercentChange1d / 100)
+                : tokenBalanceFiat;
+
+            tokenFiat += tokenBalanceFiat;
+            tokenFiat1dAgo += tokenBalance1dAgo;
+          },
+        );
+      }
+
+      return {
+        ethFiat: ethFiat ?? 0,
+        ethFiat1dAgo: ethFiat1dAgo ?? 0,
+        tokenFiat: tokenFiat ?? 0,
+        tokenFiat1dAgo: tokenFiat1dAgo ?? 0,
+      };
     }
-
-    const ethPricePercentChange1d =
-      tokenExchangeRates?.[zeroAddress() as Hex]?.pricePercentChange1d;
-
-    ethFiat1dAgo =
-      ethPricePercentChange1d !== undefined
-        ? ethFiat / (1 + ethPricePercentChange1d / 100)
-        : ethFiat;
-
-    if (tokens.length > 0) {
-      const { contractBalances: tokenBalances } = TokenBalancesController.state;
-      tokens.forEach(
-        (item: { address: string; balance?: string; decimals: number }) => {
-          const exchangeRate = tokenExchangeRates?.[item.address as Hex]?.price;
-
-          const tokenBalance =
-            item.balance ||
-            (item.address in tokenBalances
-              ? renderFromTokenMinimalUnit(
-                  tokenBalances[item.address],
-                  item.decimals,
-                )
-              : undefined);
-          const tokenBalanceFiat = balanceToFiatNumber(
-            // TODO: Fix this by handling or eliminating the undefined case
-            // @ts-expect-error This variable can be `undefined`, which would break here.
-            tokenBalance,
-            conversionRate,
-            exchangeRate,
-            decimalsToShow,
-          );
-
-          const tokenPricePercentChange1d =
-            tokenExchangeRates?.[item.address as Hex]?.pricePercentChange1d;
-
-          const tokenBalance1dAgo =
-            tokenPricePercentChange1d !== undefined
-              ? tokenBalanceFiat / (1 + tokenPricePercentChange1d / 100)
-              : tokenBalanceFiat;
-
-          tokenFiat += tokenBalanceFiat;
-          tokenFiat1dAgo += tokenBalance1dAgo;
-        },
-      );
-    }
-
+    // if selectedInternalAccount is undefined, return default 0 value.
     return {
-      ethFiat: ethFiat ?? 0,
-      ethFiat1dAgo: ethFiat1dAgo ?? 0,
-      tokenFiat: tokenFiat ?? 0,
-      tokenFiat1dAgo: tokenFiat1dAgo ?? 0,
+      ethFiat: 0,
+      tokenFiat: 0,
+      ethFiat1dAgo: 0,
+      tokenFiat1dAgo: 0,
     };
   };
 
@@ -1762,11 +1791,17 @@ class Engine {
       TokenBalancesController,
       TokenRatesController,
       PermissionController,
+      ///: BEGIN:ONLY_INCLUDE_IF(preinstalled-snaps,external-snaps)
+      SnapController,
+      ///: END:ONLY_INCLUDE_IF
       LoggingController,
     } = this.context;
 
     // Remove all permissions.
     PermissionController?.clearState?.();
+    ///: BEGIN:ONLY_INCLUDE_IF(preinstalled-snaps,external-snaps)
+    SnapController.clearState();
+    ///: END:ONLY_INCLUDE_IF
 
     //Clear assets info
     TokensController.update({

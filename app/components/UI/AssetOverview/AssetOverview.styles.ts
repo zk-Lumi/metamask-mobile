@@ -31,13 +31,11 @@ const styleSheet = (params: { theme: Theme }) => {
       paddingHorizontal: 10,
       paddingVertical: 20,
     },
-    balanceWrapper: {
-      paddingHorizontal: 16,
-    },
     balanceButtons: {
       flexDirection: 'row',
       justifyContent: 'center',
       paddingTop: 20,
+      paddingHorizontal: 16,
     },
     footerButton: {
       flexGrow: 1,
@@ -51,6 +49,10 @@ const styleSheet = (params: { theme: Theme }) => {
       marginLeft: 8,
     },
     aboutWrapper: {
+      marginBottom: 20,
+      paddingHorizontal: 16,
+    },
+    tokenDetailsWrapper: {
       marginBottom: 20,
       paddingHorizontal: 16,
     },

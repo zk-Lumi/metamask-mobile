@@ -56,9 +56,8 @@ const mockInitialState: DeepPartial<RootState> = {
     showHexData: true,
   },
   transaction: {
-    currentTransactionSecurityAlertResponse: {
-      id: 1,
-      response: {
+    securityAlertResponses: {
+      1: {
         result_type: 'Malicious',
         reason: 'blur_farming',
         providerRequestsCount: {},
@@ -105,6 +104,7 @@ jest.mock('../../../../../util/ENSUtils', () => ({
 jest.mock('../../../../../lib/ppom/ppom-util', () => ({
   ...jest.requireActual('../../../../../lib/ppom/ppom-util'),
   validateRequest: jest.fn(),
+  isChainSupported: jest.fn(),
 }));
 
 jest.mock('../../../../../core/Engine', () => ({

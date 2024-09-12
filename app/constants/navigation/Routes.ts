@@ -33,6 +33,7 @@ const Routes = {
   },
   LEDGER_MESSAGE_SIGN_MODAL: 'LedgerMessageSignModal',
   LEDGER_TRANSACTION_MODAL: 'LedgerTransactionModal',
+  OPTIONS_SHEET: 'OptionsSheet',
   QR_SCANNER: 'QRScanner',
   TRANSACTIONS_VIEW: 'TransactionsView',
   MODAL: {
@@ -94,6 +95,7 @@ const Routes = {
     SDK_DISCONNECT: 'SDKDisconnect',
     ACCOUNT_CONNECT: 'AccountConnect',
     ACCOUNT_PERMISSIONS: 'AccountPermissions',
+    REVOKE_ALL_ACCOUNT_PERMISSIONS: 'RevokeAllAccountPermissions',
     NETWORK_SELECTOR: 'NetworkSelector',
     RETURN_TO_DAPP_MODAL: 'ReturnToDappModal',
     ACCOUNT_ACTIONS: 'AccountActions',
@@ -103,6 +105,7 @@ const Routes = {
     SHOW_NFT_DISPLAY_MEDIA: 'ShowNftDisplayMedia',
     SHOW_TOKEN_ID: 'ShowTokenId',
     ORIGIN_SPAM_MODAL: 'OriginSpamModal',
+    TOOLTIP_MODAL: 'tooltipModal',
   },
   BROWSER: {
     HOME: 'BrowserTabHome',
