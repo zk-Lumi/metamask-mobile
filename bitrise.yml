@@ -133,16 +133,14 @@ stages:
   run_smoke_e2e_ios_android_stage:
     workflows:
       - run_ios_api_specs: {}
-      - run_tag_smoke_accounts_ios: {}
-      - run_tag_smoke_accounts_android: {}
-      - run_tag_smoke_assets_ios: {}
-      - run_tag_smoke_assets_android: {}
-      - run_tag_smoke_confirmations_ios: {}
-      - run_tag_smoke_confirmations_android: {}
-      - run_tag_smoke_swaps_ios: {}
-      - run_tag_smoke_swaps_android: {}
-      - run_tag_smoke_core_ios: {}
-      - run_tag_smoke_core_android: {}
+      - run_first_shard_ios: {}
+      - run_first_shard_android: {}
+      - run_second_shard_ios: {}
+      - run_second_shard_android: {}
+      - run_third_shard_ios: {}
+      - run_third_shard_android: {}
+      - run_fourth_shard_ios: {}
+      - run_fourth_shard_android: {}
   build_regression_e2e_ios_android_stage:
     workflows:
       - ios_build_regression_tests: {}
@@ -563,6 +561,71 @@ workflows:
       - TEST_SUITE_TAG: '.*SmokeCore.*'
     after_run:
       - android_e2e_test
+  run_first_shard_ios:
+    envs:
+      - SHARD: '1'
+    after_run:
+      - ios_e2e_test
+  run_second_shard_ios:
+    envs:
+      - SHARD: '2'
+    after_run:
+      - ios_e2e_test
+  run_third_shard_ios:
+    envs:
+      - SHARD: '3'
+    after_run:
+      - ios_e2e_test
+  run_fourth_shard_ios:
+    envs:
+      - SHARD: '4'
+    after_run:
+      - ios_e2e_test
+  run_fifth_shard_ios:
+    envs:
+      - SHARD: '5'
+    after_run:
+      - ios_e2e_test
+  run_first_shard_android:
+    meta:
+      bitrise.io:
+        stack: linux-docker-android-20.04
+    envs:
+      - SHARD: '1'
+    after_run:
+      - android_e2e_test
+  run_second_shard_android:
+    meta:
+      bitrise.io:
+        stack: linux-docker-android-20.04
+    envs:
+      - SHARD: '2'
+    after_run:
+      - android_e2e_test
+  run_third_shard_android:
+    meta:
+      bitrise.io:
+        stack: linux-docker-android-20.04
+    envs:
+      - SHARD: '3'
+    after_run:
+      - android_e2e_test
+  run_fourth_shard_android:
+    meta:
+      bitrise.io:
+        stack: linux-docker-android-20.04
+    envs:
+      - SHARD: '4'
+    after_run:
+      - android_e2e_test
+  run_fifth_shard_android:
+    meta:
+      bitrise.io:
+        stack: linux-docker-android-20.04
+    envs:
+      - SHARD: '5'
+    after_run:
+      - android_e2e_test
   android_e2e_build:
     before_run:
       - code_setup
@@ -697,7 +760,7 @@ workflows:
                 fi
                 export METAMASK_ENVIRONMENT='local'
                 export METAMASK_BUILD_TYPE='main'
-                IGNORE_BOXLOGS_DEVELOPMENT="true" FORCE_BUNDLING=true yarn test:e2e:android:bitrise:run "$TEST_SUITE_FOLDER" --testNamePattern="$TEST_SUITE"
+                IGNORE_BOXLOGS_DEVELOPMENT="true" FORCE_BUNDLING=true yarn test:e2e:ios:bitrise:run --shard="$SHARD"/4 e2e/specs
       - custom-test-results-export@1:
           title: Export test results
           is_always_run: true
@@ -1536,6 +1599,8 @@ trigger_map:
   - push_branch: release/*
     pipeline: release_e2e_pipeline
   - push_branch: main
+    pipeline: app_launch_times_pipeline
+  - push_branch: optimize-bitrise
     pipeline: app_launch_times_pipeline
   - tag: 'qa-*'
     pipeline: create_qa_builds_pipeline
