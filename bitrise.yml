@@ -1019,7 +1019,7 @@ workflows:
                 node -v
                 export METAMASK_ENVIRONMENT='local'
                 export METAMASK_BUILD_TYPE='main'
-                IGNORE_BOXLOGS_DEVELOPMENT="true" FORCE_BUNDLING=true yarn test:e2e:ios:bitrise:run --shard="$SHARD"/4 e2e/specs
+                IGNORE_BOXLOGS_DEVELOPMENT="true" FORCE_BUNDLING=true yarn test:e2e:ios:debug:run --shard="$SHARD"/4 e2e/specs
       - custom-test-results-export@1:
           is_always_run: true
           is_skippable: false
