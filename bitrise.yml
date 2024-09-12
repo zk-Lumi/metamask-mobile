@@ -589,7 +589,7 @@ workflows:
   run_first_shard_android:
     meta:
       bitrise.io:
-        stack: linux-docker-android-20.04
+        stack: linux-docker-android-22.04
     envs:
       - SHARD: '1'
     after_run:
@@ -597,7 +597,7 @@ workflows:
   run_second_shard_android:
     meta:
       bitrise.io:
-        stack: linux-docker-android-20.04
+        stack: linux-docker-android-22.04
     envs:
       - SHARD: '2'
     after_run:
@@ -605,7 +605,7 @@ workflows:
   run_third_shard_android:
     meta:
       bitrise.io:
-        stack: linux-docker-android-20.04
+        stack: linux-docker-android-22.04
     envs:
       - SHARD: '3'
     after_run:
@@ -613,7 +613,7 @@ workflows:
   run_fourth_shard_android:
     meta:
       bitrise.io:
-        stack: linux-docker-android-20.04
+        stack: linux-docker-android-22.04
     envs:
       - SHARD: '4'
     after_run:
@@ -621,7 +621,7 @@ workflows:
   run_fifth_shard_android:
     meta:
       bitrise.io:
-        stack: linux-docker-android-20.04
+        stack: linux-docker-android-22.04
     envs:
       - SHARD: '5'
     after_run:
