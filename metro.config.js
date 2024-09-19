@@ -1,3 +1,6 @@
+const { getDefaultConfig, mergeConfig } = require('@react-native/metro-config');
+const { withNativeWind } = require('nativewind/metro');
+
 /* eslint-disable import/no-commonjs */
 /**
  * Metro configuration for React Native
@@ -6,37 +9,39 @@
  * @type {import('metro-config').MetroConfig}
  */
 
-const { getDefaultConfig, mergeConfig } = require('@react-native/metro-config');
-
 module.exports = function (baseConfig) {
   const defaultConfig = mergeConfig(baseConfig, getDefaultConfig(__dirname));
   const {
     resolver: { assetExts, sourceExts },
   } = defaultConfig;
 
-  return mergeConfig(defaultConfig, {
-    resolver: {
-      assetExts: assetExts.filter((ext) => ext !== 'svg'),
-      sourceExts: [...sourceExts, 'svg', 'cjs', 'mjs'],
-      resolverMainFields: ['sbmodern', 'react-native', 'browser', 'main'],
-    },
-    transformer: {
-      babelTransformerPath: require.resolve('./metro.transform.js'),
-      assetPlugins: ['react-native-svg-asset-plugin'],
-      svgAssetPlugin: {
-        pngCacheDir: '.png-cache',
-        scales: [1],
-        output: {
-          compressionLevel: 6,
-        },
+  return withNativeWind(
+    mergeConfig(defaultConfig, {
+      resolver: {
+        assetExts: assetExts.filter((ext) => ext !== 'svg'),
+        sourceExts: [...sourceExts, 'svg', 'cjs', 'mjs'],
+        resolverMainFields: ['sbmodern', 'react-native', 'browser', 'main'],
       },
-      getTransformOptions: async () => ({
-        transform: {
-          experimentalImportSupport: true,
-          inlineRequires: true,
+      transformer: {
+        babelTransformerPath: require.resolve('./metro.transform.js'),
+        assetPlugins: ['react-native-svg-asset-plugin'],
+        unstable_allowRequireContext: true,
+        svgAssetPlugin: {
+          pngCacheDir: '.png-cache',
+          scales: [1],
+          output: {
+            compressionLevel: 6,
+          },
         },
-      }),
-    },
-    resetCache: true,
-  });
+        getTransformOptions: async () => ({
+          transform: {
+            experimentalImportSupport: true,
+            inlineRequires: true,
+          },
+        }),
+      },
+      resetCache: true,
+    }),
+    { input: './global.css' },
+  );
 };
