@@ -54,7 +54,7 @@
     "test": "yarn test:unit && yarn test:e2e",
     "test:unit": "jest ./app/ ./locales/",
     "test:unit:update": "time jest -u ./app/",
-    "test:api-specs": "detox reset-lock-file && detox test -c ios.sim.apiSpecs",
+    "test:api-specs": "detox reset-lock-file && detox test -c ios.sim.apiSpecs --maxWorkers 1",
     "test:e2e": "yarn test:e2e:ios && yarn test:e2e:android",
     "test:e2e:ios": "detox build -c ios.sim.release && detox test -c ios.sim.release",
     "test:e2e:ios:debug:build": "IS_TEST='true' detox build -c ios.sim.debug",

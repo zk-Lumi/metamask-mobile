@@ -16,7 +16,6 @@ import { CustomNetworks } from '../../resources/networks.e2e';
 import TestHelpers from '../../helpers';
 import FixtureServer from '../../fixtures/fixture-server';
 import { getFixturesServerPort } from '../../fixtures/utils';
-import { Regression } from '../../tags';
 import Assertions from '../../utils/Assertions';
 import ActivitiesView from '../../pages/ActivitiesView';
 import DetailsModal from '../../pages/modals/DetailsModal';
@@ -25,7 +24,7 @@ const fixtureServer = new FixtureServer();
 const sourceTokenSymbol = 'USDT';
 const destTokenSymbol = 'DAI';
 
-describe(Regression('Swap from Token view'), () => {
+describe('Swap from Token view', () => {
   const swapOnboarded = true; // TODO: Set it to false once we show the onboarding page again.
   beforeAll(async () => {
     await TestHelpers.reverseServerPort();
@@ -89,13 +88,18 @@ describe(Regression('Swap from Token view'), () => {
     await TokenOverview.tapBackButton();
     await TabBarComponent.tapActivity();
     await Assertions.checkIfVisible(ActivitiesView.title);
-    await Assertions.checkIfVisible(ActivitiesView.swapActivity(sourceTokenSymbol, destTokenSymbol));
+    await Assertions.checkIfVisible(
+      ActivitiesView.swapActivity(sourceTokenSymbol, destTokenSymbol),
+    );
     await ActivitiesView.tapOnSwapActivity(sourceTokenSymbol, destTokenSymbol);
 
     try {
       await Assertions.checkIfVisible(DetailsModal.title);
     } catch (e) {
-      await ActivitiesView.tapOnSwapActivity(sourceTokenSymbol, destTokenSymbol);
+      await ActivitiesView.tapOnSwapActivity(
+        sourceTokenSymbol,
+        destTokenSymbol,
+      );
       await Assertions.checkIfVisible(DetailsModal.title);
     }
 
