@@ -8,7 +8,7 @@ import TestHelpers from '../../helpers';
 import FixtureBuilder from '../../fixtures/fixture-builder';
 import { withFixtures } from '../../fixtures/fixture-helper';
 
-describe(SmokeAssets('Import all tokens detected'), () => {
+describe(SmokeCore('Import all tokens detected'), () => {
   beforeAll(async () => {
     jest.setTimeout(150000);
     await TestHelpers.reverseServerPort();
