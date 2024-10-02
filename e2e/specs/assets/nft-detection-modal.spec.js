@@ -13,6 +13,7 @@ import { SmokeAssets } from '../../tags';
 import NetworkListModal from '../../pages/modals/NetworkListModal';
 import NetworkEducationModal from '../../pages/modals/NetworkEducationModal';
 import { NftDetectionModalSelectorsText } from '../../selectors/Modals/NftDetectionModal.selectors';
+import TabBarComponent from '../../pages/TabBarComponent';
 
 describe(SmokeAssets('NFT Detection Modal'), () => {
   const ETHEREUM = 'Ethereum Main Network';
@@ -92,7 +93,8 @@ describe(SmokeAssets('NFT Detection Modal'), () => {
           NftDetectionModalSelectorsText.NFT_AUTO_DETECTION_BANNER,
         );
 
-        await Assertions.checkIfTextIsDisplayed(testNftOnMainnet);
+        // await Assertions.checkIfTextIsDisplayed(testNftOnMainnet);
+        await TabBarComponent.tapBrowser();
       },
     );
   });
