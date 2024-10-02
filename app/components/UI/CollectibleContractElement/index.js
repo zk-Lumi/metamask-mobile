@@ -254,19 +254,13 @@ function CollectibleContractElement({
       </TouchableOpacity>
       {collectiblesVisible && (
         <View style={styles.grid}>
-          {collectiblesGrid.map((row, rowIndex) => (
-            <View
-              key={`row-${rowIndex}`}
-              style={styles.collectiblesRowContainer}
-            >
-              {row.map((collectible, colIndex) =>
-                renderCollectible(
-                  { ...collectible, logo: asset.logo },
-                  `collectible-${rowIndex}-${colIndex}`,
-                ),
+          {/* {collectiblesGrid.map((row, i) => (
+            <View key={i} style={styles.collectiblesRowContainer}>
+              {row.map((collectible, index) =>
+                renderCollectible({ ...collectible, logo: asset.logo }, index),
               )}
             </View>
-          ))}
+          ))} */}
         </View>
       )}
       <ActionSheet
