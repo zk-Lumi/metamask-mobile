@@ -1,6 +1,6 @@
 'use strict';
 import { loginToApp } from '../../viewHelper';
-import { SmokeAssets } from '../../tags';
+import { SmokeCore } from '../../tags';
 import WalletView from '../../pages/wallet/WalletView';
 import DetectedTokensView from '../../pages/wallet/DetectedTokensView';
 import Assertions from '../../utils/Assertions';
