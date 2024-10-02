@@ -256,13 +256,17 @@ const CollectibleContracts = ({
         toLowerCaseEquals(collectible.address, item.address),
       );
       return (
-        <CollectibleContractElement
-          onPress={onItemPress}
-          asset={item}
+        // <CollectibleContractElement
+        //   onPress={onItemPress}
+        //   asset={item}
+        //   key={item.address}
+        //   contractCollectibles={contractCollectibles}
+        //   collectiblesVisible={index === 0}
+        // />
+        <View
+          style={{ height: 50, width: 50, backgroundColor: 'red', margin: 16 }}
           key={item.address}
-          contractCollectibles={contractCollectibles}
-          collectiblesVisible={index === 0}
-        />
+        ></View>
       );
     },
     [collectibles, onItemPress],
