@@ -268,7 +268,7 @@ function CollectibleContractElement({
           </Text>
         </View>
       </TouchableOpacity>
-      {collectiblesVisible && (
+      {collectiblesVisible ? (
         <View style={styles.grid}>
           {collectiblesGrid.map((row) => (
             <View
@@ -282,7 +282,7 @@ function CollectibleContractElement({
           ))}{' '}
           */}
         </View>
-      )}
+      ) : null}
       <ActionSheet
         ref={actionSheetRef}
         title={strings('wallet.collectible_action_title')}
