@@ -12,6 +12,11 @@ import { useAppTheme, ThemeContext } from '../../../util/theme';
 import { ToastContextWrapper } from '../../../component-library/components/Toast';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { isTest } from '../../../util/test/utils';
+import {
+  TWRNCThemeProvider,
+  TWRNCTheme,
+  ColorScheme,
+} from '../../../util/twrnc-theme';
 
 /**
  * Top level of the component hierarchy
@@ -84,11 +89,16 @@ const ConnectedRoot = () => {
   return (
     <SafeAreaProvider>
       <ThemeContext.Provider value={theme}>
-        <ToastContextWrapper>
-          <ErrorBoundary view="Root">
-            <App />
-          </ErrorBoundary>
-        </ToastContextWrapper>
+        <TWRNCThemeProvider
+          theme={TWRNCTheme.Brand}
+          colorScheme={ColorScheme.Themed}
+        >
+          <ToastContextWrapper>
+            <ErrorBoundary view="Root">
+              <App />
+            </ErrorBoundary>
+          </ToastContextWrapper>
+        </TWRNCThemeProvider>
       </ThemeContext.Provider>
     </SafeAreaProvider>
   );
