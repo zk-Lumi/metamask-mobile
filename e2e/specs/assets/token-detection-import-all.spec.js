@@ -1,6 +1,6 @@
 'use strict';
 import { loginToApp } from '../../viewHelper';
-import { SmokeAssets } from '../../tags';
+import { SmokeCore } from '../../tags';
 import WalletView from '../../pages/wallet/WalletView';
 import DetectedTokensView from '../../pages/wallet/DetectedTokensView';
 import Assertions from '../../utils/Assertions';
@@ -8,7 +8,7 @@ import TestHelpers from '../../helpers';
 import FixtureBuilder from '../../fixtures/fixture-builder';
 import { withFixtures } from '../../fixtures/fixture-helper';
 
-describe(SmokeAssets('Import all tokens detected'), () => {
+describe(SmokeCore('Import all tokens detected'), () => {
   beforeAll(async () => {
     jest.setTimeout(150000);
     await TestHelpers.reverseServerPort();
