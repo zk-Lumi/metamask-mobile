@@ -64,6 +64,7 @@ pipelines:
   app_launch_times_pipeline:
     stages:
       - create_build_qa_android: {}
+      - create_build_qa_ios: {}
       - app_launch_times_test_stage: {}
 
   #App Upgrade pipeline. Runs on browserstack
