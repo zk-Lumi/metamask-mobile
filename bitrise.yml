@@ -519,6 +519,15 @@ workflows:
         machine_type_id: elite-xl
     after_run:
       - wdio_android_e2e_test
+  run_ios_app_launch_times_appium_test:
+    envs:
+      - TEST_TYPE: 'performance'
+    meta:
+      bitrise.io:
+        stack: osx-xcode-15.0.x
+        machine_type_id: g2.mac.large
+    after_run:
+      - wdio_ios_e2e_test
 
   ### Separating workflows so they run concurrently during smoke runs
   run_tag_smoke_accounts_ios:
