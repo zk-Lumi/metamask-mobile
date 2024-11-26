@@ -655,6 +655,7 @@ workflows:
     envs:
       - TEST_SUITE_FOLDER: './e2e/specs/multichain/*'
       - TEST_SUITE_TAG: '.*SmokeCore.*'
+      - CACHE_KEY_SUFFIX: 'multichain-on'
     after_run:
       - ios_e2e_test
   run_tag_multichain_android:
@@ -1003,7 +1004,7 @@ workflows:
             - artifact_sources: .*
           title: Pull iOS build $MULTICHAIN_MODE
       - script@1:
-          title: Copy iOS build for Detox
+          title: Copy iOS build for Detox "${MULTICHAIN_MODE}"
           inputs:
             - content: |-
                 #!/usr/bin/env bash
