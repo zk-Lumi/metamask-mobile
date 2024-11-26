@@ -923,6 +923,7 @@ workflows:
                 export MM_MULTICHAIN_V1_ENABLED='false'
                 export MM_CHAIN_PERMISSIONS='false'
                 export CACHE_KEY_SUFFIX='multichain-off'
+              fi
               echo "Multichain mode set to $MULTICHAIN_MODE"
       - script@1:
           title: Generating ccache key using native folder checksum
