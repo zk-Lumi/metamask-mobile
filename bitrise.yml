@@ -136,12 +136,8 @@ stages:
       - android_e2e_build: {}
   build_multichain_e2e_ios_android_stage:
     abort_on_fail: true
-    envs:
-      # - MM_MULTICHAIN_V1_ENABLED: 'true'
-      # - MM_CHAIN_PERMISSIONS: 'true'
-      - MULTICHAIN_MODE: 'on'
     workflows:
-      - ios_e2e_build: {}
+      - ios_build_multichain_tests: {}
       # - android_e2e_build: {}
   run_multichain_e2e_ios_android_stage:
     workflows:
@@ -495,6 +491,11 @@ workflows:
       - TEST_SUITE: 'Regression'
     after_run:
       - ios_e2e_test
+  ios_build_multichain_tests:
+    envs:
+      - MULTICHAIN_MODE: 'on'
+    after_run:
+      - ios_e2e_build
   android_build_regression_tests:
     meta:
       bitrise.io:
