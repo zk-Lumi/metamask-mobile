@@ -137,15 +137,16 @@ stages:
   build_multichain_e2e_ios_android_stage:
     abort_on_fail: true
     envs:
-      - MM_MULTICHAIN_V1_ENABLED: 'false'
-      - MM_CHAIN_PERMISSIONS: 'false'
+      # - MM_MULTICHAIN_V1_ENABLED: 'true'
+      # - MM_CHAIN_PERMISSIONS: 'true'
+      - MULTICHAIN_MODE: 'on'
     workflows:
       - ios_e2e_build: {}
-      - android_e2e_build: {}
+      # - android_e2e_build: {}
   run_multichain_e2e_ios_android_stage:
     workflows:
       - run_tag_multichain_ios: {}
-      - run_tag_multichain_android: {}
+      # - run_tag_multichain_android: {}
   run_smoke_e2e_ios_android_stage:
     workflows:
       - run_ios_api_specs: {}
@@ -910,10 +911,25 @@ workflows:
       - notify_failure
     steps:
       - script@1:
+          title: Set Multichain Environment Variables
+          inputs:
+           - content: |-
+              #!/usr/bin/env bash
+              if [ "$MULTICHAIN_MODE" = "on" ]; then
+                export MM_MULTICHAIN_V1_ENABLED='true'
+                export MM_CHAIN_PERMISSIONS='true'
+                export CACHE_KEY_SUFFIX='multichain-on'
+              else
+                export MM_MULTICHAIN_V1_ENABLED='false'
+                export MM_CHAIN_PERMISSIONS='false'
+                export CACHE_KEY_SUFFIX='multichain-off'
+              echo "Multichain mode set to $MULTICHAIN_MODE"
+      - script@1:
           title: Generating ccache key using native folder checksum
           inputs:
             - content: |-
                 #!/usr/bin/env bash
+                export BUILD_CACHE_KEY="ios_${CACHE_KEY_SUFFIX}"
                 ./scripts/cache/set-cache-envs.sh ios
       - certificate-and-profile-installer@1: {}
       - set-xcode-build-number@1:
@@ -974,8 +990,8 @@ workflows:
       - deploy-to-bitrise-io@2.2.3:
           inputs:
             - pipeline_intermediate_files: |-
-                ios/build/Build:INTERMEDIATE_IOS_BUILD_DIR
-                ../Library/Detox/ios:INTERMEDIATE_IOS_DETOX_DIR
+                ios/build/Build:INTERMEDIATE_IOS_BUILD_DIR_${CACHE_KEY_SUFFIX}
+                ../Library/Detox/ios:INTERMEDIATE_IOS_DETOX_DIR_${CACHE_KEY_SUFFIX}
           title: Save iOS build
       - save-cache@1:
           title: Save node_modules
@@ -995,7 +1011,7 @@ workflows:
       - pull-intermediate-files@1:
           inputs:
             - artifact_sources: .*
-          title: Pull iOS build
+          title: Pull iOS build $MULTICHAIN_MODE
       - script@1:
           title: Copy iOS build for Detox
           inputs:
@@ -1009,8 +1025,8 @@ workflows:
 
                 # Copy saved files for Detox usage
                 # INTERMEDIATE_IOS_BUILD_DIR & INTERMEDIATE_IOS_DETOX_DIR are the cached directories by ios_e2e_build's "Save iOS build" step
-                cp -r "$INTERMEDIATE_IOS_BUILD_DIR" "$BITRISE_SOURCE_DIR/ios/build"
-                cp -r "$INTERMEDIATE_IOS_DETOX_DIR" "$BITRISE_SOURCE_DIR/../Library/Detox"
+                cp -r "$INTERMEDIATE_IOS_BUILD_DIR_${MULTICHAIN_MODE}" "$BITRISE_SOURCE_DIR/ios/build"
+                cp -r "$INTERMEDIATE_IOS_DETOX_DIR_${MULTICHAIN_MODE}" "$BITRISE_SOURCE_DIR/../Library/Detox"
       - restore-cocoapods-cache@2: {}
       - restore-cache@2:
           title: Restore cache node_modules
@@ -1701,5 +1717,5 @@ trigger_map:
     pipeline: pr_smoke_e2e_pipeline
   - tag: 'v*.*.*-RC-*'
     pipeline: release_e2e_pipeline
-  - push_branch: test-multichain-e2e-ci-workflow
+  - push_branch: handle-both-variants-on-ci
     pipeline: multichain_e2e_pipeline
