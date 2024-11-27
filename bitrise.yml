@@ -981,8 +981,8 @@ workflows:
       - deploy-to-bitrise-io@2.2.3:
           inputs:
             - pipeline_intermediate_files: |-
-                ios/build/Build:${INTERMEDIATE_IOS_BUILD_DIR}_${CACHE_KEY_SUFFIX}
-                ../Library/Detox/ios:${INTERMEDIATE_IOS_DETOX_DIR}_${CACHE_KEY_SUFFIX}
+                ios/build/Build:${INTERMEDIATE_IOS_BUILD_DIR}_multichain-on
+                ../Library/Detox/ios:INTERMEDIATE_IOS_DETOX_DIR_multichain-on
           title: Save iOS build
       - save-cache@1:
           title: Save node_modules
@@ -1013,11 +1013,11 @@ workflows:
                 # Create directories for Detox
                 mkdir -p "$BITRISE_SOURCE_DIR/ios/build/Build"
                 mkdir -p "$BITRISE_SOURCE_DIR/../Library/Detox/ios"
-                echo "HERE it is: ${INTERMEDIATE_IOS_DETOX_DIR}_${CACHE_KEY_SUFFIX}"
+
                 # Copy saved files for Detox usage
                 # INTERMEDIATE_IOS_BUILD_DIR & INTERMEDIATE_IOS_DETOX_DIR are the cached directories by ios_e2e_build's "Save iOS build" step
-                cp -r "${INTERMEDIATE_IOS_BUILD_DIR}_${CACHE_KEY_SUFFIX}" "$BITRISE_SOURCE_DIR/ios/build"
-                cp -r "${INTERMEDIATE_IOS_DETOX_DIR}_${CACHE_KEY_SUFFIX}" "$BITRISE_SOURCE_DIR/../Library/Detox"
+                cp -r "INTERMEDIATE_IOS_BUILD_DIR_multichain-on" "$BITRISE_SOURCE_DIR/ios/build"
+                cp -r "INTERMEDIATE_IOS_DETOX_DIR_multichain-on" "$BITRISE_SOURCE_DIR/../Library/Detox"
       - restore-cocoapods-cache@2: {}
       - restore-cache@2:
           title: Restore cache node_modules
