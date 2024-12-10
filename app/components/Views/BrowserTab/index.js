@@ -71,9 +71,8 @@ import {
   PHISHFORT_BLOCKLIST_ISSUE_URL,
   MM_ETHERSCAN_URL,
 } from '../../../constants/urls';
-import {
-  MAX_MESSAGE_LENGTH,
-} from '../../../constants/dapp';
+import { getLocalTestDappPort } from '../../../../e2e/fixtures/utils';
+
 import sanitizeUrlInput from '../../../util/url/sanitizeUrlInput';
 import {
   getPermittedAccounts,
@@ -372,6 +371,12 @@ export const BrowserTab = (props) => {
     const currentPage = checkUrl || url.current;
     const prefixedUrl = prefixUrlWithProtocol(currentPage);
     const { host: currentHost } = getUrlObj(prefixedUrl);
+
+    if (isTest) {
+      const testHost = `localhost:${getLocalTestDappPort()}`;
+      return currentHost === testHost;
+    }
+
     return (
       currentHost === HOMEPAGE_HOST || currentHost === OLD_HOMEPAGE_URL_HOST
     );
