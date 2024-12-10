@@ -374,7 +374,7 @@ export const BrowserTab = (props) => {
     const { host: currentHost } = getUrlObj(prefixedUrl);
 
     if (isTest) {
-      const testHost = `localhost:${getLocalTestDappPort()}`;
+      const testHost = `https://metamask.github.io/test-dapp/`;
       return currentHost === testHost;
     }
 
