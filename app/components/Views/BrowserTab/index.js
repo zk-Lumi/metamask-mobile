@@ -71,6 +71,7 @@ import {
   PHISHFORT_BLOCKLIST_ISSUE_URL,
   MM_ETHERSCAN_URL,
 } from '../../../constants/urls';
+import { MAX_MESSAGE_LENGTH } from '../../../constants/dapp';
 import { getLocalTestDappPort } from '../../../../e2e/fixtures/utils';
 
 import sanitizeUrlInput from '../../../util/url/sanitizeUrlInput';
