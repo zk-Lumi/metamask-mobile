@@ -1,26 +1,33 @@
 name: ci
+
 on:
   push:
-    branches: main
+    branches:
+      - main
   pull_request:
   merge_group:
-    types: [checks_requested]
+    types:
+      - checks_requested
 
 jobs:
   check-diff:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v3
+
       - uses: actions/setup-node@v3
         with:
           node-version-file: '.nvmrc'
           cache: yarn
+
       - uses: ruby/setup-ruby@a6e6f86333f0a2523ece813039b8b4be04560854 #v1
         with:
           ruby-version: '3.1.6'
         env:
           BUNDLE_GEMFILE: ios/Gemfile
+
       - run: yarn setup
+
       - name: Require clean working directory
         shell: bash
         run: |
@@ -34,13 +41,17 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
+
       - uses: actions/setup-node@v3
         with:
           node-version-file: '.nvmrc'
           cache: yarn
+
       - run: yarn setup --node
+
       - name: Deduplicate dependencies
         run: yarn deduplicate
+
       - name: Print error if duplicates found
         shell: bash
         run: |
@@ -48,6 +59,7 @@ jobs:
             echo "Duplicate dependencies detected; run 'yarn deduplicate' to remove them"
             exit 1
           fi
+
   scripts:
     runs-on: ubuntu-20.04
     strategy:
@@ -60,12 +72,16 @@ jobs:
           - test:tgz-check
     steps:
       - uses: actions/checkout@v3
+
       - uses: actions/setup-node@v3
         with:
           node-version-file: '.nvmrc'
           cache: yarn
+
       - run: yarn setup --node
+
       - run: yarn ${{ matrix['scripts'] }}
+
       - name: Require clean working directory
         shell: bash
         run: |
@@ -75,6 +91,7 @@ jobs:
           else
             echo "No changes detected"
           fi
+
   unit-tests:
     runs-on: ubuntu-20.04
     strategy:
@@ -82,25 +99,29 @@ jobs:
         shard: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
     steps:
       - uses: actions/checkout@v3
+
       - uses: actions/setup-node@v3
         with:
           node-version-file: '.nvmrc'
           cache: yarn
+
       - run: yarn setup
-      # The "10" in this command is the total number of shards. It must be kept
-      # in sync with the length of matrix.shard
-      - run: yarn test:unit --shard=${{ matrix.shard }}/10 --forceExit --silent --coverageReporters=json
+
+      - run: yarn test:unit --shard=${{ matrix.shard }}/${{ strategy.job-total }} --forceExit --silent --coverageReporters=json
         env:
           NODE_OPTIONS: --max_old_space_size=20480
+
       - name: Rename coverage report to include shard number
         shell: bash
         run: |
           mv ./tests/coverage/coverage-final.json ./tests/coverage/coverage-${{ matrix.shard }}.json
+
       - uses: actions/upload-artifact@v3
         with:
           name: coverage-${{ matrix.shard }}
           path: ./tests/coverage/coverage-${{ matrix.shard }}.json
           if-no-files-found: error
+
       - name: Require clean working directory
         shell: bash
         run: |
@@ -110,30 +131,39 @@ jobs:
           else
             echo "No changes detected"
           fi
+
   merge-unit-tests:
     runs-on: ubuntu-20.04
     needs: unit-tests
     steps:
       - uses: actions/checkout@v3
+
       - uses: actions/setup-node@v3
         with:
           node-version-file: '.nvmrc'
           cache: yarn
+
       - run: yarn setup
+
       - uses: actions/download-artifact@v3
         with:
           path: tests/coverage/
+
       - name: Gather partial coverage reports into one directory
         shell: bash
         run: |
           mv ./tests/coverage/coverage-*/* ./tests/coverage
+
       - run: yarn test:merge-coverage
+
       - run: yarn test:validate-coverage
+
       - uses: actions/upload-artifact@v3
         with:
           name: coverage
           path: ./tests/merged-coverage/lcov.info
           if-no-files-found: error
+
       - name: Require clean working directory
         shell: bash
         run: |
@@ -148,10 +178,12 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
+
       - uses: actions/setup-node@v3
         with:
           node-version-file: '.nvmrc'
           cache: yarn
+
       - name: Install dependencies
         run: yarn setup
 
@@ -193,16 +225,20 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0 # SonarCloud needs a full checkout to perform necessary analysis
+
       - uses: actions/setup-node@v3
         with:
           node-version-file: '.nvmrc'
+
       - uses: actions/download-artifact@v3
         with:
           name: coverage
           path: coverage/
+
       - name: Upload coverage reports to Codecov
         if: ${{ always() }}
         uses: codecov/codecov-action@d9f34f8cd5cb3b3eb79b3e4b5dae3a16df499a70
+
       - name: SonarCloud Scan
         if: ${{ env.HAVE_SONAR_TOKEN == 'true' }}
         # This is SonarSource/sonarcloud-github-action@v2.0.0
@@ -210,6 +246,7 @@ jobs:
         env:
           HAVE_SONAR_TOKEN: ${{ secrets.SONAR_TOKEN != '' }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
       - name: Require clean working directory
         shell: bash
         run: |
@@ -226,12 +263,14 @@ jobs:
             echo "$path"
             git update-index --no-assume-unchanged "$path"
           done
+
   sonar-cloud-quality-gate-status:
     runs-on: ubuntu-latest
     needs: sonar-cloud
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+
       - name: SonarCloud Quality Gate Status
         id: sonar-status
         env:
@@ -280,37 +319,40 @@ jobs:
               exit 1
             fi
           fi
+
   check-workflows:
     name: Check workflows
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - name: Download actionlint
         id: download-actionlint
         run: bash <(curl https://raw.githubusercontent.com/rhysd/actionlint/62dc61a45fc95efe8c800af7a557ab0b9165d63b/scripts/download-actionlint.bash) 1.7.1
         shell: bash
+
       - name: Check workflow files
         run: ${{ steps.download-actionlint.outputs.executable }} -color
         shell: bash
+
   all-jobs-pass:
     name: All jobs pass
     runs-on: ubuntu-20.04
     needs:
-      [
-        check-diff,
-        dedupe,
-        scripts,
-        unit-tests,
-        check-workflows,
-        js-bundle-size-check,
-        sonar-cloud-quality-gate-status,
-      ]
+      - check-diff
+      - dedupe
+      - scripts
+      - unit-tests
+      - check-workflows
+      - js-bundle-size-check
+      - sonar-cloud-quality-gate-status
     outputs:
       ALL_JOBS_PASSED: ${{ steps.jobs-passed-status.outputs.ALL_JOBS_PASSED }}
     steps:
       - name: Set jobs passed status
         id: jobs-passed-status
         run: echo "ALL_JOBS_PASSED=true" >> "$GITHUB_OUTPUT"
+
   check-all-jobs-pass:
     name: Check all jobs pass
     runs-on: ubuntu-20.04
